@@ -1,27 +1,35 @@
-# This file is the entry point to configure your own services.
-# Files in the packages/ subdirectory configure your dependencies.
-
-# Put parameters here that don't need to change on each machine where the app is deployed
-# https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
 
 services:
-    # default configuration for services in *this* file
     _defaults:
-        autowire: true      # Automatically injects dependencies in your services.
-        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+        autowire: false
+        autoconfigure: false
+        public: false
 
-    # makes classes in src/ available to be used as services
-    # this creates a service per class whose id is the fully-qualified class name
-    App\:
-        resource: '../src/*'
-        exclude: '../src/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}'
+    AdnanMula\Chronogg\Notifier\Domain\Service\:
+        autowire: true
+        autoconfigure: true
+        resource: '../src/Domain/Service'
 
-    # controllers are imported separately to make sure services can be injected
-    # as action arguments even if you don't extend any base controller class
-    App\Controller\:
-        resource: '../src/Controller'
-        tags: ['controller.service_arguments']
+#    AdnanMula\Chronogg\Notifier\Infrastructure\:
+#        autowire: true
+#        autoconfigure: true
+#        resource: '../src/Infrastructure'
 
-    # add more service definitions when explicit configuration is needed
-    # please note that last definitions always *replace* previous ones
+    client.communication.telegram:
+        class: AdnanMula\Chronogg\Notifier\Infrastructure\Communication\TelegramClient
+        arguments:
+            - '%env(TELEGRAM_TOKEN)%'
+            - '%env(TELEGRAM_GROUP_CHAT_ID)%'
+            - '%env(TELEGRAM_ADMIN_CHAT_ID)%'
+
+    client.deal.chrono:
+        class: AdnanMula\Chronogg\Notifier\Infrastructure\Chrono\ChronoClient
+
+    command.chrono.notify:
+        class: AdnanMula\Chronogg\Notifier\Entrypoint\Command\NotifyCurrentDealCommand
+        arguments:
+            - '@client.deal.chrono'
+            - '@client.communication.telegram'
+        tags:
+            - { name: console.command, command: 'chronogg:deal:notify' }

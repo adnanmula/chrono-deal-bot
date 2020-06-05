@@ -1,0 +1,10 @@
+version: '3.4'
+services:
+  php:
+    build:
+      context: docker/php
+    container_name: chn_php
+    working_dir: /var/www/html
+    volumes:
+      - .:/var/www/html
+      - ~/.composer:/.composer
