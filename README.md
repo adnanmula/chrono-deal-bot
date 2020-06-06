@@ -1,4 +1,4 @@
-# Chronno.gg daily deal notifier
+# Chrono.gg daily deal notifier
 
 ```bash
 # example in crontab
