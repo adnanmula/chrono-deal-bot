@@ -2,6 +2,7 @@
 
 namespace AdnanMula\Chronogg\Notifier\Entrypoint\Command;
 
+use AdnanMula\Chronogg\Notifier\Domain\Model\Deal\Deal;
 use AdnanMula\Chronogg\Notifier\Domain\Service\Communication\CommunicationClient;
 use AdnanMula\Chronogg\Notifier\Infrastructure\Chrono\ChronoClient;
 use Symfony\Component\Console\Command\Command;
@@ -28,8 +29,20 @@ final class NotifyCurrentDealCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->chronoClient->currentDeal();
-        $this->communicationClient->say('hi');
-        dd('hola');
+        $this->communicationClient->say(
+            $this->messageFromDeal($this->chronoClient->currentDeal())
+        );
+
+        return 1;
+    }
+
+    private function messageFromDeal(?Deal $deal): string
+    {
+        return '[' . $deal->app()->name() . '](' . $deal->shop()->dealUrl() . ')' . ' esta a '
+            . \round($deal->price()->salePrice()->getAmount() / 100, 2) . ' '
+            . $deal->price()->currency()->getCode() . ' con un descuento del '
+            . $deal->price()->discount()
+            . '% (' . \round($deal->price()->normalPrice()->getAmount() / 100, 2) . ' '
+            . $deal->price()->currency()->getCode() . ')';
     }
 }
