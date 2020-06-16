@@ -1,4 +1,5 @@
 parameters:
+    db_url: '%env(resolve:DATABASE_URL)%'
 
 services:
     _defaults:
@@ -11,10 +12,50 @@ services:
         autoconfigure: true
         resource: '../src/Domain/Service'
 
+    AdnanMula\Chronogg\Notifier\Infrastructure\Persistence\Repository\:
+        autowire: true
+        autoconfigure: true
+        resource: '../src/Infrastructure/Persistence/Repository'
+
 #    AdnanMula\Chronogg\Notifier\Infrastructure\:
 #        autowire: true
 #        autoconfigure: true
 #        resource: '../src/Infrastructure'
+
+    repository.dbal.connection:
+        class: Doctrine\DBAL\Connection
+        factory: 'Doctrine\DBAL\DriverManager::getConnection'
+        arguments:
+            - url: '%db_url%'
+              driver: 'pdo_pgsql'
+
+    Doctrine\DBAL\Connection:
+        alias: repository.dbal.connection
+
+    repository.dbal.migration:
+        class: AdnanMula\Chronogg\Notifier\Infrastructure\Persistence\Repository\DbalMigration
+        arguments:
+            - '@repository.dbal.connection'
+
+    repository.dbal.repository:
+        class: AdnanMula\Chronogg\Notifier\Infrastructure\Persistence\Repository\DbalRepository
+        arguments:
+            - '@repository.dbal.connection'
+
+    repository.dbal.migration.v001:
+        class: AdnanMula\Chronogg\Migrations\Postgres\V001
+        parent: 'repository.dbal.migration'
+
+    repository.dbal.user:
+        class: AdnanMula\Chronogg\Notifier\Infrastructure\Persistence\Repository\User\UserDbalRepository
+        parent: 'repository.dbal.repository'
+
+    command.env.init:
+        class: AdnanMula\Chronogg\Notifier\Entrypoint\Command\InitEnvironmentCommand
+        arguments:
+            - '@repository.dbal.migration.v001'
+        tags:
+            - { name: console.command, command: 'chronogg:env:init' }
 
     client.communication.telegram:
         class: AdnanMula\Chronogg\Notifier\Infrastructure\Communication\TelegramClient
@@ -31,5 +72,6 @@ services:
         arguments:
             - '@client.deal.chrono'
             - '@client.communication.telegram'
+            - '@repository.dbal.user'
         tags:
             - { name: console.command, command: 'chronogg:deal:notify' }

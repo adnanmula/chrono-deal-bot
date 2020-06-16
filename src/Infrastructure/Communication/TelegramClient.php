@@ -8,24 +8,14 @@ use DemigrantSoft\Telegram\SendMessage\TelegramClient as Client;
 final class TelegramClient implements CommunicationClient
 {
     private Client $client;
-    private string $groupChatId;
-    private string $adminChatId;
 
-    public function __construct(string $token, string $groupChatId, string $adminChatId)
+    public function __construct(string $token)
     {
         $this->client = new Client($token);
-
-        $this->groupChatId = $groupChatId;
-        $this->adminChatId = $adminChatId;
     }
 
-    public function say(string $msg): void
+    public function say(string $msg, string $to): void
     {
-        $this->client->sendMessage($this->groupChatId, $msg);
-    }
-
-    public function log(string $msg): void
-    {
-        $this->client->sendMessage($this->adminChatId, $msg);
+        $this->client->sendMessage($to, $msg);
     }
 }

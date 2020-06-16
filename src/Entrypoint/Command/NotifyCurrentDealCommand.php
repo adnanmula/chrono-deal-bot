@@ -3,6 +3,7 @@
 namespace AdnanMula\Chronogg\Notifier\Entrypoint\Command;
 
 use AdnanMula\Chronogg\Notifier\Domain\Model\Deal\Deal;
+use AdnanMula\Chronogg\Notifier\Domain\Model\User\UserRepository;
 use AdnanMula\Chronogg\Notifier\Domain\Service\Communication\CommunicationClient;
 use AdnanMula\Chronogg\Notifier\Infrastructure\Chrono\ChronoClient;
 use Symfony\Component\Console\Command\Command;
@@ -13,27 +14,33 @@ final class NotifyCurrentDealCommand extends Command
 {
     private ChronoClient $chronoClient;
     private CommunicationClient $communicationClient;
+    private UserRepository $userRepository;
 
-    public function __construct(ChronoClient $chronoClient, CommunicationClient $communicationClient)
+    public function __construct(ChronoClient $chronoClient, CommunicationClient $communicationClient, UserRepository $userRepository)
     {
         $this->chronoClient = $chronoClient;
         $this->communicationClient = $communicationClient;
+        $this->userRepository = $userRepository;
 
         parent::__construct();
     }
 
     protected function configure()
     {
-        $this->setDescription('Notifies current chrono.gg deal.');
+        $this->setDescription('Notifies current chrono.gg deal to all subscribed users.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->communicationClient->say(
-            $this->messageFromDeal($this->chronoClient->currentDeal())
-        );
+        $users = $this->userRepository->all();
 
-        return 1;
+        foreach ($users as $user) {
+            $this->communicationClient->say(
+                $this->messageFromDeal($this->chronoClient->currentDeal()), $user->reference()->value()
+            );
+        }
+
+        return Command::SUCCESS;
     }
 
     private function messageFromDeal(?Deal $deal): string
