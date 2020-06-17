@@ -1,0 +1,8 @@
+services:
+    client.communication.telegram:
+        class: AdnanMula\Chronogg\Notifier\Infrastructure\Service\Communication\TelegramClient
+        arguments:
+            - '%env(TELEGRAM_TOKEN)%'
+
+    client.deal.chrono:
+        class: AdnanMula\Chronogg\Notifier\Infrastructure\Service\Chrono\ChronoClient

@@ -36,7 +36,7 @@ final class InitEnvironmentCommand extends Command
             },
         );
 
-        return 0;
+        return Command::SUCCESS;
     }
 
     private function migrationName(Migration $migration): string

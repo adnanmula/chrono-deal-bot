@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace AdnanMula\Chronogg\Notifier\Infrastructure\Chrono;
+namespace AdnanMula\Chronogg\Notifier\Infrastructure\Service\Chrono;
 
 use AdnanMula\Chronogg\Notifier\Domain\Model\Deal\Deal;
 use AdnanMula\Chronogg\Notifier\Domain\Model\Deal\ValueObject\App;

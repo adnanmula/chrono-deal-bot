@@ -7,19 +7,20 @@ use AdnanMula\Chronogg\Notifier\Application\User\Unsubscribe\UnsubscribeUserComm
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Messenger\MessageBusInterface;
+//use Symfony\Component\Messenger\MessageBusInterface;
 
 final class TelegramGetUpdatesCommand extends Command
 {
     private string $botToken;
-    private MessageBusInterface $bus;
+//    private MessageBusInterface $bus;
 
-    public function __construct(string $botToken, MessageBusInterface $bus)
+//, MessageBusInterface $bus
+    public function __construct(string $botToken)
     {
         $this->botToken = $botToken;
 
         parent::__construct(null);
-        $this->bus = $bus;
+//        $this->bus = $bus;
     }
 
     protected function configure(): void
@@ -35,13 +36,13 @@ final class TelegramGetUpdatesCommand extends Command
         for ($i = 0; $i < $client->UpdateCount(); $i++) {
             $client->serveUpdate($i);
 
-            $command = $this->getCommand($reference, $text);
-
-            if (null === $command) {
-                //TODO send unknown command
-            } else {
-                $this->bus->dispatch($command);
-            }
+//            $command = $this->getCommand($reference, $text);
+//
+//            if (null === $command) {
+//                //TODO send unknown command
+//            } else {
+//                $this->bus->dispatch($command);
+//            }
         }
 
         return 0;

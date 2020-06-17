@@ -5,7 +5,7 @@ namespace AdnanMula\Chronogg\Notifier\Entrypoint\Command;
 use AdnanMula\Chronogg\Notifier\Domain\Model\Deal\Deal;
 use AdnanMula\Chronogg\Notifier\Domain\Model\User\UserRepository;
 use AdnanMula\Chronogg\Notifier\Domain\Service\Communication\CommunicationClient;
-use AdnanMula\Chronogg\Notifier\Infrastructure\Chrono\ChronoClient;
+use AdnanMula\Chronogg\Notifier\Infrastructure\Service\Chrono\ChronoClient;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -36,7 +36,8 @@ final class NotifyCurrentDealCommand extends Command
 
         foreach ($users as $user) {
             $this->communicationClient->say(
-                $this->messageFromDeal($this->chronoClient->currentDeal()), $user->reference()->value()
+                $this->messageFromDeal($this->chronoClient->currentDeal()),
+                $user->reference()->value(),
             );
         }
 

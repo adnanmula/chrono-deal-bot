@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace AdnanMula\Chronogg\Notifier\Infrastructure\Communication;
+namespace AdnanMula\Chronogg\Notifier\Infrastructure\Service\Communication;
 
 use AdnanMula\Chronogg\Notifier\Domain\Service\Communication\CommunicationClient;
 use DemigrantSoft\Telegram\SendMessage\TelegramClient as Client;

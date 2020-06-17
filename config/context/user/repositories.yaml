@@ -1,0 +1,4 @@
+services:
+  repository.dbal.user:
+    class: AdnanMula\Chronogg\Notifier\Infrastructure\Persistence\Repository\User\UserDbalRepository
+    parent: 'repository.dbal.repository'

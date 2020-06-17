@@ -1,0 +1,16 @@
+services:
+  command.env.init:
+    class: AdnanMula\Chronogg\Notifier\Entrypoint\Command\InitEnvironmentCommand
+    arguments:
+      - '@repository.dbal.migration.v001'
+    tags:
+      - { name: console.command, command: 'chronogg:env:init' }
+
+  command.chrono.notify:
+    class: AdnanMula\Chronogg\Notifier\Entrypoint\Command\NotifyCurrentDealCommand
+    arguments:
+      - '@client.deal.chrono'
+      - '@client.communication.telegram'
+      - '@repository.dbal.user'
+    tags:
+      - { name: console.command, command: 'chronogg:deal:notify' }
