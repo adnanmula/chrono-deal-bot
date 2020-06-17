@@ -14,7 +14,7 @@ services:
     arguments:
       - '@repository.dbal.connection'
 
-  repository.dbal.repository:
+  repository.dbal.base:
     class: AdnanMula\Chronogg\Notifier\Infrastructure\Persistence\Repository\DbalRepository
     arguments:
       - '@repository.dbal.connection'

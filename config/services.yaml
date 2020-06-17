@@ -7,6 +7,12 @@ services:
         autoconfigure: false
         public: false
 
+    AdnanMula\Chronogg\Notifier\Application\:
+        autowire: true
+        autoconfigure: true
+        resource: '../src/Application/*/*/*Handler.php'
+        tags: [{ name: messenger.message_handler, bus: messenger.bus.command }]
+
     AdnanMula\Chronogg\Notifier\Domain\Service\:
         autowire: true
         autoconfigure: true

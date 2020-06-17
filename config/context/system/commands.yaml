@@ -11,6 +11,15 @@ services:
     arguments:
       - '@client.deal.chrono'
       - '@client.communication.telegram'
-      - '@repository.dbal.user'
+      - '@AdnanMula\Chronogg\Notifier\Domain\Model\User\UserRepository'
     tags:
       - { name: console.command, command: 'chronogg:deal:notify' }
+
+  command.telegram.update:
+    class: AdnanMula\Chronogg\Notifier\Entrypoint\Command\TelegramGetUpdatesCommand
+    arguments:
+      - '%env(TELEGRAM_TOKEN)%'
+      - '@client.communication.telegram'
+      - '@messenger.bus.command'
+    tags:
+      - { name: console.command, command: 'chronogg:telegram:update' }

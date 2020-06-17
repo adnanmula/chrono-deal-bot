@@ -4,23 +4,26 @@ namespace AdnanMula\Chronogg\Notifier\Entrypoint\Command;
 
 use AdnanMula\Chronogg\Notifier\Application\User\Subscribe\SubscribeUserCommand;
 use AdnanMula\Chronogg\Notifier\Application\User\Unsubscribe\UnsubscribeUserCommand;
+use AdnanMula\Chronogg\Notifier\Domain\Model\User\ValueObject\UserId;
+use AdnanMula\Chronogg\Notifier\Domain\Service\Communication\CommunicationClient;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-//use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Component\Messenger\MessageBusInterface;
 
 final class TelegramGetUpdatesCommand extends Command
 {
     private string $botToken;
-//    private MessageBusInterface $bus;
+    private CommunicationClient $communication;
+    private MessageBusInterface $bus;
 
-//, MessageBusInterface $bus
-    public function __construct(string $botToken)
+    public function __construct(string $botToken, CommunicationClient $communication, MessageBusInterface $bus)
     {
         $this->botToken = $botToken;
+        $this->communication = $communication;
+        $this->bus = $bus;
 
         parent::__construct(null);
-//        $this->bus = $bus;
     }
 
     protected function configure(): void
@@ -33,44 +36,43 @@ final class TelegramGetUpdatesCommand extends Command
         $client = new \Telegram($this->botToken);
 
         $client->getUpdates();
+
         for ($i = 0; $i < $client->UpdateCount(); $i++) {
             $client->serveUpdate($i);
 
-//            $command = $this->getCommand($reference, $text);
-//
-//            if (null === $command) {
-//                //TODO send unknown command
-//            } else {
-//                $this->bus->dispatch($command);
-//            }
+            $command = $this->getCommand((string) $client->ChatID(), $client->Text(), $client->Username());
+
+            if (null !== $command) {
+                $this->bus->dispatch($command);
+            }
         }
 
         return 0;
     }
 
-    private function getCommand(string $reference, array $text)
+    private function getCommand(string $reference, string $text, string $username)
     {
-        $arguments = \explode(' ', $text['text']);
+        $arguments = \explode(' ', $text);
 
         $command = \array_shift($arguments);
 
         switch (true) {
-            case (SubscribeUserCommand::COMMAND === $command):
-                return $this->subscribeCommand($reference, $arguments);
-            case (UnsubscribeUserCommand::COMMAND === $command):
-                return $this->unSubscribeCommand($reference, $arguments);
+            case ('/'.SubscribeUserCommand::COMMAND === $command):
+                return $this->subscribeCommand($reference, $username);
+            case ('/'.UnsubscribeUserCommand::COMMAND === $command):
+                return $this->unSubscribeCommand($reference);
             default:
                 return null;
         }
     }
 
-    private function subscribeCommand(string $reference, array $arguments): SubscribeUserCommand
+    private function subscribeCommand(string $reference, string $username): SubscribeUserCommand
     {
-        return new SubscribeUserCommand($reference, $arguments[0], $arguments[1]);
+        return new SubscribeUserCommand(UserId::v4()->value(), $reference, $username);
     }
 
-    private function unSubscribeCommand(string $reference, array $arguments): UnsubscribeUserCommand
+    private function unSubscribeCommand(string $reference): UnsubscribeUserCommand
     {
-        return new UnsubscribeUserCommand($reference, $arguments[0]);
+        return new UnsubscribeUserCommand($reference);
     }
 }
