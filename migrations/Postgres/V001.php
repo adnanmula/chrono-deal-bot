@@ -13,7 +13,7 @@ final class V001 extends DbalMigration
                 id uuid NOT NULL,
                 reference character varying(16) NOT NULL
                     CONSTRAINT reference_unique UNIQUE,
-                username character varying(16) NOT NULL,
+                username character varying(32) NOT NULL,
                 PRIMARY KEY(id)
             )'
         );

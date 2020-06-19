@@ -40,7 +40,11 @@ final class TelegramGetUpdatesCommand extends Command
         for ($i = 0; $i < $client->UpdateCount(); $i++) {
             $client->serveUpdate($i);
 
-            $command = $this->getCommand((string) $client->ChatID(), $client->Text(), $client->Username());
+            $command = $this->getCommand(
+                (string) $client->ChatID(),
+                $client->Text(),
+                $client->messageFromGroup() ? $client->messageFromGroupTitle() : $client->Username(),
+            );
 
             if (null !== $command) {
                 $this->bus->dispatch($command);
@@ -53,8 +57,14 @@ final class TelegramGetUpdatesCommand extends Command
     private function getCommand(string $reference, string $text, string $username)
     {
         $arguments = \explode(' ', $text);
-
         $command = \array_shift($arguments);
+        $isFromGroup = \strpos($command, '@');
+
+        $command = \substr(
+            $command,
+            0,
+            $isFromGroup !== false && $isFromGroup !== 0 ? $isFromGroup : \strlen($command)
+        );
 
         switch (true) {
             case (\in_array($command, SubscribeUserCommand::COMMAND)):
