@@ -51,7 +51,7 @@ final class TelegramGetUpdatesCommand extends Command
             }
         }
 
-        return 0;
+        return Command::SUCCESS;
     }
 
     private function getCommand(string $reference, string $text, string $username)
