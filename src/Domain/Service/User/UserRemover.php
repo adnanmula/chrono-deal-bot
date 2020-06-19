@@ -19,7 +19,7 @@ final class UserRemover
         $this->repository = $repository;
     }
 
-    public function execute(UserId $id, UserReference $reference, UserUsername $username): void
+    public function execute(UserReference $reference): void
     {
         $user = $this->repository->byReference($reference);
 

@@ -17,5 +17,8 @@ stop: ## stop all containers
 down: ## down all containers
 	UID=${UID} GID=${GID} docker-compose -f ${FILE} down
 
+init:
+	UID=${UID} GID=${GID} docker-compose -f ${FILE} run php php bin/console chronogg:env:init
+
 notify: ## notify current deal
 	UID=${UID} GID=${GID} docker-compose -f ${FILE} run php php bin/console c:d:n

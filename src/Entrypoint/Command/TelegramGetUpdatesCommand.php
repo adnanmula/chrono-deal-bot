@@ -57,9 +57,9 @@ final class TelegramGetUpdatesCommand extends Command
         $command = \array_shift($arguments);
 
         switch (true) {
-            case ('/'.SubscribeUserCommand::COMMAND === $command):
+            case (\in_array($command, SubscribeUserCommand::COMMAND)):
                 return $this->subscribeCommand($reference, $username);
-            case ('/'.UnsubscribeUserCommand::COMMAND === $command):
+            case (\in_array($command, UnsubscribeUserCommand::COMMAND)):
                 return $this->unSubscribeCommand($reference);
             default:
                 return null;

@@ -7,7 +7,7 @@ use Assert\Assert;
 
 final class UnsubscribeUserCommand
 {
-    public const COMMAND = 'unsubscribe';
+    public const COMMAND = ['/unsubscribe', '/unsub'];
 
     private UserReference $reference;
 

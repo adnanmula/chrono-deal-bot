@@ -9,7 +9,7 @@ use Assert\Assert;
 
 final class SubscribeUserCommand
 {
-    public const COMMAND = 'subscribe';
+    public const COMMAND = ['/subscribe', '/sub'];
 
     private UserId $id;
     private UserReference $reference;

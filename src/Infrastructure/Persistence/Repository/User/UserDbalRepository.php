@@ -85,8 +85,14 @@ final class UserDbalRepository extends DbalRepository implements UserRepository
 
     public function remove(User $user): void
     {
-        // TODO: Implement remove() method.
-    }
+        $stmt = $this->connection->prepare(\sprintf(
+            'DELETE FROM %s WHERE reference = :reference',
+            self::TABLE_USER,
+        ));
+
+        $stmt->bindValue(':reference', $user->reference()->value());
+
+        $stmt->execute();    }
 
     private function map($user): User
     {
