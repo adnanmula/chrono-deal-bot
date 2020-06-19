@@ -8,3 +8,25 @@ services:
     volumes:
       - .:/var/www/html
       - ~/.composer:/.composer
+    networks:
+      - network_chn
+  adminer:
+    image: adminer:latest
+    container_name: chn_adminer
+    ports:
+      - ${ADMINER_PORT}:8080
+    networks:
+      - network_chn
+  postgres:
+    image: postgres:11.1-alpine
+    container_name: chn_postgres
+    ports:
+      - ${POSTGRES_PORT}:5432
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    networks:
+      - network_chn
+
+networks:
+  network_chn:
+    driver: bridge

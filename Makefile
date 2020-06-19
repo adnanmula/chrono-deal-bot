@@ -17,5 +17,11 @@ stop: ## stop all containers
 down: ## down all containers
 	UID=${UID} GID=${GID} docker-compose -f ${FILE} down
 
+init: ## initialize environment
+	UID=${UID} GID=${GID} docker-compose -f ${FILE} run php php bin/console chronogg:env:init
+
+update: ## process telegram updates
+	UID=${UID} GID=${GID} docker-compose -f ${FILE} run php php bin/console chronogg:telegram:update
+
 notify: ## notify current deal
-	UID=${UID} GID=${GID} docker-compose -f ${FILE} run php php bin/console c:d:n
+	UID=${UID} GID=${GID} docker-compose -f ${FILE} run php php bin/console chronogg:deal:notify

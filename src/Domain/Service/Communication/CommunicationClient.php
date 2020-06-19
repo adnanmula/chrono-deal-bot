@@ -4,6 +4,5 @@ namespace AdnanMula\Chronogg\Notifier\Domain\Service\Communication;
 
 interface CommunicationClient
 {
-    public function say(string $msg): void;
-    public function log(string $msg): void;
+    public function say(string $msg, string $to): void;
 }

@@ -6,13 +6,19 @@
         "ext-ctype": "*",
         "ext-iconv": "*",
         "ext-json": "*",
+        "ext-sqlite3": "*",
+        "beberlei/assert": "^3.2",
         "demigrantsoft/telegram-send-message": "^0.0.1",
+        "doctrine/dbal": "^2.10",
+        "eleirbag89/telegrambotphp": "^1.3",
         "guzzlehttp/guzzle": "^6.5",
         "moneyphp/money": "^3.3",
+        "ramsey/uuid": "^4.0",
         "symfony/console": "5.1.*",
         "symfony/dotenv": "5.1.*",
         "symfony/flex": "^1.3.1",
         "symfony/framework-bundle": "5.1.*",
+        "symfony/messenger": "5.1.*",
         "symfony/yaml": "5.1.*"
     },
     "require-dev": {
@@ -32,7 +38,8 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "AdnanMula\\Chronogg\\Notifier\\Tests\\": "tests/"
+            "AdnanMula\\Chronogg\\Notifier\\Tests\\": "tests/",
+            "AdnanMula\\Chronogg\\Migrations\\": "migrations/"
         }
     },
     "replace": {
