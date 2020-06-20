@@ -48,7 +48,7 @@ final class TelegramGetUpdatesCommand extends Command
 
             if (null !== $command) {
                 $this->bus->dispatch($command);
-                $this->communication->say('Ok!', $client->ChatID());
+                $this->communication->say('Ok!', (string) $client->ChatID());
             }
         }
 
