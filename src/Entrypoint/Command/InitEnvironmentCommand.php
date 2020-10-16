@@ -4,6 +4,7 @@ namespace AdnanMula\Chronogg\Notifier\Entrypoint\Command;
 
 use AdnanMula\Chronogg\Notifier\Domain\Service\Persistence\Migration;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -26,6 +27,17 @@ final class InitEnvironmentCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $app = $this->getApplication();
+
+        if (null === $app) {
+            throw new \RuntimeException('Kernel not initialized');
+        }
+
+        $app->setAutoExit(false);
+
+        $app->run($this->dropDatabaseCommand());
+        $app->run($this->createDatabaseCommand());
+
         \array_walk(
             $this->migrations,
             function (Migration $migration) use ($output) {
@@ -37,6 +49,28 @@ final class InitEnvironmentCommand extends Command
         );
 
         return Command::SUCCESS;
+    }
+
+    private function dropDatabaseCommand(): ArrayInput
+    {
+        return new ArrayInput(
+            [
+                'command' => 'doctrine:database:drop',
+                '--no-interaction',
+                '--force' => true,
+                '--if-exists' => true,
+            ],
+        );
+    }
+
+    private function createDatabaseCommand(): ArrayInput
+    {
+        return new ArrayInput(
+            [
+                'command' => 'doctrine:database:create',
+                '--no-interaction',
+            ],
+        );
     }
 
     private function migrationName(Migration $migration): string

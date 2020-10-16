@@ -1,5 +1,7 @@
 # Chrono.gg daily deal notifier
 
+### Daily deals are shutting down on november so this project will stop working.
+
 Subscribe to https://telegram.me/chronoDealBot
 
 ```

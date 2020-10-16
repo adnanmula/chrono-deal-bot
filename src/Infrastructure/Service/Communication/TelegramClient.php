@@ -3,7 +3,7 @@
 namespace AdnanMula\Chronogg\Notifier\Infrastructure\Service\Communication;
 
 use AdnanMula\Chronogg\Notifier\Domain\Service\Communication\CommunicationClient;
-use DemigrantSoft\Telegram\SendMessage\TelegramClient as Client;
+use AdnanMula\Telegram\SendMessage\TelegramClient as Client;
 
 final class TelegramClient implements CommunicationClient
 {
