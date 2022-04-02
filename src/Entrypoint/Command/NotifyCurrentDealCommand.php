@@ -25,12 +25,12 @@ final class NotifyCurrentDealCommand extends Command
         parent::__construct();
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this->setDescription('Notifies current chrono.gg deal to all subscribed users.');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $users = $this->userRepository->all();
 

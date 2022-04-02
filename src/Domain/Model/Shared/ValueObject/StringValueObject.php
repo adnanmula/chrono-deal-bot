@@ -4,7 +4,7 @@ namespace AdnanMula\Chronogg\Notifier\Domain\Model\Shared\ValueObject;
 
 class StringValueObject
 {
-    private $value;
+    private string $value;
 
     protected function __construct(string $value)
     {
